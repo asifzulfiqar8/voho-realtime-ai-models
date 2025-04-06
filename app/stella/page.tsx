@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, useCallback, useRef, useEffect } from "react";
-import Image from "next/image";
+import { endCall, startCall } from "@/lib/callFunctions";
 import avatarImg from "@/public/new-stella.png";
-import { startCall, endCall, toggleMute } from "@/lib/callFunctions";
-import { Role } from "ultravox-client";
+import Image from "next/image";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { IoCallOutline } from "react-icons/io5";
 import { demoConfig } from "../dentalDemoConfig";
 
