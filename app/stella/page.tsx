@@ -28,7 +28,7 @@ export default function StellaPage() {
     }
   }, [conversation, isTyping]);
 
-  const handleStatusChange = useCallback((status: string) => {
+  const handleStatusChange = useCallback((status?: string) => {
     setAgentStatus(status ?? "Ready to connect");
   }, []);
 
