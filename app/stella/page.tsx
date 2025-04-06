@@ -9,7 +9,7 @@ import { IoCallOutline } from "react-icons/io5";
 import { demoConfig } from "../dentalDemoConfig";
 
 interface Message {
-  speaker: "agent" | "user";
+  speaker: "agent";
   text: string;
   timestamp: string;
 }
