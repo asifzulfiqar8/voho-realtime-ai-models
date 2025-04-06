@@ -13,6 +13,11 @@ interface Message {
   timestamp: string;
 }
 
+type Transcript = {
+  speaker: "agent" | "user";
+  text: string;
+};
+
 export default function StellaPage() {
   const [isCallActive, setIsCallActive] = useState(false);
   const [agentStatus, setAgentStatus] = useState("Disconnected");
@@ -66,21 +71,24 @@ export default function StellaPage() {
     setIsTyping(false);
   };
 
-  const handleTranscriptChange = useCallback((transcripts: any[]) => {
-    if (transcripts) {
-      const newMessages: Message[] = transcripts.map(
-        (t): Message => ({
-          speaker: t.speaker === "agent" ? "agent" : "user",
-          text: t.text,
-          timestamp: new Date().toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-        })
-      );
-      setConversation((prev) => [...prev, ...newMessages]);
-    }
-  }, []);
+  const handleTranscriptChange = useCallback(
+    (transcripts: Transcript[] | undefined) => {
+      if (transcripts) {
+        const newMessages: Message[] = transcripts.map(
+          (t): Message => ({
+            speaker: t.speaker === "agent" ? "agent" : "user",
+            text: t.text,
+            timestamp: new Date().toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            }),
+          })
+        );
+        setConversation((prev) => [...prev, ...newMessages]);
+      }
+    },
+    []
+  );
 
   const handleDebugMessage = useCallback((msg: any) => {
     setDebugMessages((prev) => [...prev, msg]);
