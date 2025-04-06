@@ -9,7 +9,7 @@ import { IoCallOutline } from "react-icons/io5";
 import { demoConfig } from "../dentalDemoConfig";
 
 interface Message {
-  speaker: "agent";
+  speaker: "agent" | "user";
   text: string;
   timestamp: string;
 }
@@ -69,14 +69,16 @@ export default function StellaPage() {
 
   const handleTranscriptChange = useCallback((transcripts: any[]) => {
     if (transcripts) {
-      const newMessages = transcripts.map((t) => ({
-        speaker: t.speaker === "agent" ? "agent" : "user",
-        text: t.text,
-        timestamp: new Date().toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-      }));
+      const newMessages: Message[] = transcripts.map(
+        (t): Message => ({
+          speaker: t.speaker === "agent" ? "agent" : "user",
+          text: t.text,
+          timestamp: new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+        })
+      );
       setConversation((prev) => [...prev, ...newMessages]);
     }
   }, []);
