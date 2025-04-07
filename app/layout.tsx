@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import Image from 'next/image';
-import UVLogo from '@/public/Voho.svg';
+
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Voho Realtime Demo",
-  description: "Demonstration of using the Voho API to create a call with an AI agent.",
+  description:
+    "Demonstration of using the Voho API to create a call with an AI agent.",
 };
 
 export default function RootLayout({
@@ -17,23 +17,14 @@ export default function RootLayout({
     <html lang="en">
       <head>
         {/* <!-- Fathom - beautiful, simple website analytics --> */}
-        <script src="https://cdn.usefathom.com/script.js" data-site="ONYOCTXK" defer></script>
-        {/* <!-- / Fathom --> */}
+        <script
+          src="https://cdn.usefathom.com/script.js"
+          data-site="ONYOCTXK"
+          defer
+        ></script>
       </head>
-      <body className="bg-black text-white">
-        <div className="flex mx-auto justify-between my-4 max-w-6xl">
-          <Image
-            src={UVLogo}
-            alt="Voho logo and wordmark"
-            width={200}
-          />
-          <a href="https://cal.com/voho-ai/15min" >
-            <button className="hover:bg-gray-700 px-6 py-2 border-2 rounded-[3px] w-40 mb-2">
-              Get In Touch
-            </button>
-          </a>
-        </div>
-        {children}
+      <body className="w-full h-full">
+        <main>{children}</main>
       </body>
     </html>
   );
