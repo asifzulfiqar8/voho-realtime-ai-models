@@ -42,10 +42,10 @@ const initialProgress: ProgressStep[] = [
 
 export default function StellaPage() {
   const [isCallActive, setIsCallActive] = useState(false);
-  const [agentStatus, setAgentStatus] = useState("Disconnected");
+  const [agentStatus, setAgentStatus] = useState("Ready to connect");
   const [conversation, setConversation] = useState<Message[]>([]);
   const [debugMessages, setDebugMessages] = useState<any[]>([]);
-  const [isTyping, setIsTyping] = useState(false);
+  // const [isTyping, setIsTyping] = useState(false);
   const transcriptRef = useRef<HTMLDivElement>(null);
   const [callProgress, setCallProgress] =
     useState<ProgressStep[]>(initialProgress);
@@ -57,7 +57,7 @@ export default function StellaPage() {
     if (transcriptRef.current) {
       transcriptRef.current.scrollTop = transcriptRef.current.scrollHeight;
     }
-  }, [conversation, isTyping]);
+  }, [conversation]);
 
   // Map the incoming status string to our step keys
   const mapStatusToKey = (status?: string): ProgressStep["key"] | null => {
@@ -90,7 +90,7 @@ export default function StellaPage() {
   }, []);
 
   const typeText = async (fullText: string) => {
-    setIsTyping(true);
+    // setIsTyping(true);
 
     // create one empty agent message
     const timestamp = new Date().toLocaleTimeString([], {
@@ -121,24 +121,24 @@ export default function StellaPage() {
       await new Promise((res) => setTimeout(res, 100));
     }
 
-    setIsTyping(false);
+    // setIsTyping(false);
   };
 
   const handleTranscriptChange = useCallback(
     (transcripts: Transcript[] | undefined) => {
       if (transcripts && transcripts.length > 0) {
         const latest = transcripts[transcripts.length - 1];
-        console.log("Transcript received:", latest);
+        const speaker = latest.speaker?.toLowerCase().trim() as
+          | "agent"
+          | "user";
+
+        // Allow only user messages (agent responses come from LLM debug already)
+        if (speaker !== "user") return;
+
         const timestamp = new Date().toLocaleTimeString([], {
           hour: "2-digit",
           minute: "2-digit",
         });
-
-        // Skip if agent is typing, to avoid duplicate agent lines
-        const speaker = latest.speaker?.toLowerCase().trim() as
-          | "agent"
-          | "user";
-        if (speaker === "agent" && isTyping) return;
 
         const newMessage: Message = {
           speaker,
@@ -149,7 +149,7 @@ export default function StellaPage() {
         setConversation((prev) => [...prev, newMessage]);
       }
     },
-    [isTyping]
+    []
   );
 
   const handleDebugMessage = useCallback((msg: any) => {
@@ -351,11 +351,11 @@ export default function StellaPage() {
                   <div className="text-xs opacity-70 mt-1">{msg.timestamp}</div>
                 </div>
               ))}
-              {isTyping && (
+              {/* {isTyping && (
                 <div className="italic text-blue-500 animate-pulse text-sm">
                   Stella is typing...
                 </div>
-              )}
+              )} */}
             </div>
           </div>
 
