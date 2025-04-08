@@ -316,8 +316,8 @@ export default function StellaPage() {
                 Information
               </h6>
               <p className="text-base text-black/70">
-                Talk to Stella, the virtual assistant of Voho, in English,
-                German & more.
+                Talk to Stella, the virtual assistant of Voho, in Arabic EG &
+                more.
               </p>
               <p className="text-base font-medium text-[#5c6bc0]">
                 Click the call button to start
