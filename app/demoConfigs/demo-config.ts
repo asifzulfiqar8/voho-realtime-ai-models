@@ -12,19 +12,19 @@ function getSystemPrompt() {
 
   ## Menu Items
     # KFC
-    2 ZINGER BURGER $6
-    2 MIGHTY ZINGER BURGER $11
+    2 Combos (2pcs MIXED) $7
+    2 Combos (2pcs DARK) $7
     POPCORN RICE BOX $6
 
     # DRINKS
     PEPSI $3
     MOUNTAIN DEW $3
     7UP $3
-    MINERAL WATER $1
+    PEPSI ZERO SUGAR $3
 
     # SIDES
     FRENCH FRIES $2
-    MASHED POTATOES $2
+    DINNER ROLL $1
     COLESLAW $2
 
   ## Conversation Flow
