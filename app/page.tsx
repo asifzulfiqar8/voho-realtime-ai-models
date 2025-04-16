@@ -4,7 +4,14 @@ import { endCall, startCall } from "@/lib/callFunctions";
 import { mapUltravoxStatusToLabel } from "@/lib/mapUltravoxStatusToLabel";
 import { PhoneOffIcon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import Loader from "@/app/components/globals/Loader";
+import React, {
+  Suspense,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   Role,
   Transcript,
@@ -296,142 +303,144 @@ export default function Home() {
   };
 
   return (
-    <SearchParamsHandler>
-      {({
-        showMuteSpeakerButton,
-        modelOverride,
-        showDebugMessages,
-        showUserTranscripts,
-      }: SearchParamsProps) => (
-        <div className="w-full bg-[#1b0b21] text-white relative">
-          <header className="flex justify-between items-center px-6 py-4 bg-white">
-            <div className="text-2xl text-red-600 font-bold">KFC</div>
-            <button className="bg-red-600 px-4 py-2 rounded text-white">
-              Join our Waitlist
-            </button>
-          </header>
-          <div className="container mx-auto px-5 flex flex-col min-h-[calc(100vh-124px)]">
-            <main className="flex-1 grid grid-cols-12 gap-4 py-5 md:py-10">
-              {/* Left Column: Dynamic Menu */}
-              <div className="col-span-3 bg-white text-black rounded-xl p-4 flex flex-col">
-                <h2 className="text-xl font-bold mb-4 text-red-600">Menu</h2>
-                {/* Tabs for product categories */}
-                <div className="flex space-x-2 mb-6">
-                  {Object.keys(menuItems).map((key) => (
-                    <button
-                      key={key}
-                      onClick={() =>
-                        setActiveTab(key as "kfc" | "drinks" | "sides")
-                      }
-                      className={`border px-3 py-1 rounded capitalize ${
-                        activeTab === key
-                          ? "bg-red-600 text-white"
-                          : "bg-white text-black"
-                      }`}
-                    >
-                      {key}
-                    </button>
-                  ))}
-                </div>
-                {/* Display products from the active tab */}
-                <div className="space-y-3 flex-1 overflow-y-auto">
-                  {menuItems[activeTab].map((item, index) => (
-                    <div
-                      key={index}
-                      className="flex justify-between items-center border-b pb-2"
-                    >
-                      <span>{item.name}</span>
-                      <span>${item.price}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Center Column: Employee Image and Conversation Area */}
-              <div className="col-span-6 flex flex-col items-center justify-center">
-                <div className="relative w-[250px] h-[250px] mb-4">
-                  <Image
-                    src={kfcEmployeeImg}
-                    alt="KFC Employee"
-                    fill
-                    className="object-cover rounded-full border-[6px] border-[#dc2626]"
-                    style={{
-                      boxShadow: isCallActive
-                        ? "rgb(220 38 38) 0px 0px 50px 9px"
-                        : "",
-                    }}
-                  />
-                </div>
-                {isCallActive ? (
-                  <div className="w-full">
-                    <div className="flex justify-center gap-4">
-                      <MicToggleButton role={Role.USER} />
-                      {showMuteSpeakerButton && (
-                        <MicToggleButton role={Role.AGENT} />
-                      )}
+    <Suspense fallback={<Loader />}>
+      <SearchParamsHandler>
+        {({
+          showMuteSpeakerButton,
+          modelOverride,
+          showDebugMessages,
+          showUserTranscripts,
+        }: SearchParamsProps) => (
+          <div className="w-full bg-[#1b0b21] text-white relative">
+            <header className="flex justify-between items-center px-6 py-4 bg-white">
+              <div className="text-2xl text-red-600 font-bold">KFC</div>
+              <button className="bg-red-600 px-4 py-2 rounded text-white">
+                Join our Waitlist
+              </button>
+            </header>
+            <div className="container mx-auto px-5 flex flex-col min-h-[calc(100vh-124px)]">
+              <main className="flex-1 grid grid-cols-12 gap-4 py-5 md:py-10">
+                {/* Left Column: Dynamic Menu */}
+                <div className="col-span-3 bg-white text-black rounded-xl p-4 flex flex-col">
+                  <h2 className="text-xl font-bold mb-4 text-red-600">Menu</h2>
+                  {/* Tabs for product categories */}
+                  <div className="flex space-x-2 mb-6">
+                    {Object.keys(menuItems).map((key) => (
                       <button
-                        type="button"
-                        onClick={handleEndCallButtonClick}
-                        disabled={!isCallActive}
-                        className="size-[60px] bg-red-600 hover:opacity-80 transition-all duration-150 rounded-full grid place-items-center"
+                        key={key}
+                        onClick={() =>
+                          setActiveTab(key as "kfc" | "drinks" | "sides")
+                        }
+                        className={`border px-3 py-1 rounded capitalize ${
+                          activeTab === key
+                            ? "bg-red-600 text-white"
+                            : "bg-white text-black"
+                        }`}
                       >
-                        <IoCallOutline className="text-[28px] text-white -rotate-90" />
+                        {key}
+                      </button>
+                    ))}
+                  </div>
+                  {/* Display products from the active tab */}
+                  <div className="space-y-3 flex-1 overflow-y-auto">
+                    {menuItems[activeTab].map((item, index) => (
+                      <div
+                        key={index}
+                        className="flex justify-between items-center border-b pb-2"
+                      >
+                        <span>{item.name}</span>
+                        <span>${item.price}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Center Column: Employee Image and Conversation Area */}
+                <div className="col-span-6 flex flex-col items-center justify-center">
+                  <div className="relative w-[250px] h-[250px] mb-4">
+                    <Image
+                      src={kfcEmployeeImg}
+                      alt="KFC Employee"
+                      fill
+                      className="object-cover rounded-full border-[6px] border-[#dc2626]"
+                      style={{
+                        boxShadow: isCallActive
+                          ? "rgb(220 38 38) 0px 0px 50px 9px"
+                          : "",
+                      }}
+                    />
+                  </div>
+                  {isCallActive ? (
+                    <div className="w-full">
+                      <div className="flex justify-center gap-4">
+                        <MicToggleButton role={Role.USER} />
+                        {showMuteSpeakerButton && (
+                          <MicToggleButton role={Role.AGENT} />
+                        )}
+                        <button
+                          type="button"
+                          onClick={handleEndCallButtonClick}
+                          disabled={!isCallActive}
+                          className="size-[60px] bg-red-600 hover:opacity-80 transition-all duration-150 rounded-full grid place-items-center"
+                        >
+                          <IoCallOutline className="text-[28px] text-white -rotate-90" />
+                        </button>
+                      </div>
+                      <div
+                        ref={transcriptContainerRef}
+                        className="h-[200px] overflow-y-auto bg-white text-black p-4 rounded mt-4"
+                      >
+                        {conversation.length === 0 && (
+                          <p className="text-center text-gray-500 py-4">
+                            Conversation will appear here...
+                          </p>
+                        )}
+                        {conversation.map((msg, index) => (
+                          <div key={index} className="mb-2">
+                            <div className="text-gray-600 text-sm">
+                              {msg.speaker === "agent" ? "KFC Agent" : "You"}
+                            </div>
+                            <div>{msg.text}</div>
+                            <div className="text-xs opacity-70 mt-1">
+                              {msg.timestamp}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="w-full max-w-lg mb-8">
+                      <button
+                        onClick={() =>
+                          handleStartCallButtonClick(
+                            modelOverride,
+                            showDebugMessages
+                          )
+                        }
+                        className="size-[60px] mx-auto bg-red-600 hover:opacity-80 transition-all duration-150 rounded-full grid place-items-center"
+                      >
+                        <IoCallOutline className="text-[28px] text-white" />
                       </button>
                     </div>
-                    <div
-                      ref={transcriptContainerRef}
-                      className="h-[200px] overflow-y-auto bg-white text-black p-4 rounded mt-4"
-                    >
-                      {conversation.length === 0 && (
-                        <p className="text-center text-gray-500 py-4">
-                          Conversation will appear here...
-                        </p>
-                      )}
-                      {conversation.map((msg, index) => (
-                        <div key={index} className="mb-2">
-                          <div className="text-gray-600 text-sm">
-                            {msg.speaker === "agent" ? "KFC Agent" : "You"}
-                          </div>
-                          <div>{msg.text}</div>
-                          <div className="text-xs opacity-70 mt-1">
-                            {msg.timestamp}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ) : (
-                  <div className="w-full max-w-lg mb-8">
-                    <button
-                      onClick={() =>
-                        handleStartCallButtonClick(
-                          modelOverride,
-                          showDebugMessages
-                        )
-                      }
-                      className="size-[60px] mx-auto bg-red-600 hover:opacity-80 transition-all duration-150 rounded-full grid place-items-center"
-                    >
-                      <IoCallOutline className="text-[28px] text-white" />
-                    </button>
-                  </div>
-                )}
-              </div>
+                  )}
+                </div>
 
-              {/* Right Column: Order Details */}
-              <div className="col-span-3 bg-white text-black rounded-xl p-4 flex flex-col">
-                <h2 className="text-xl font-bold mb-4 text-red-600">
-                  Current Order
-                </h2>
-                {/* OrderDetails uses its own event listener to update the order */}
-                <OrderDetails />
-              </div>
-            </main>
+                {/* Right Column: Order Details */}
+                <div className="col-span-3 bg-white text-black rounded-xl p-4 flex flex-col">
+                  <h2 className="text-xl font-bold mb-4 text-red-600">
+                    Current Order
+                  </h2>
+                  {/* OrderDetails uses its own event listener to update the order */}
+                  <OrderDetails />
+                </div>
+              </main>
+            </div>
+            <footer className="w-full p-4 text-center text-sm text-gray-400 bg-[#2d0f2e]">
+              &copy; 2025 KFC Demo. Powered by Voho.ai.
+            </footer>
           </div>
-          <footer className="w-full p-4 text-center text-sm text-gray-400 bg-[#2d0f2e]">
-            &copy; 2025 KFC Demo. Powered by Voho.ai.
-          </footer>
-        </div>
-      )}
-    </SearchParamsHandler>
+        )}
+      </SearchParamsHandler>
+    </Suspense>
   );
 }
